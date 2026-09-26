@@ -2,10 +2,31 @@
  * Studio details. Everything marked [EDIT] must be replaced with real
  * information before launch — search this file for "EDIT".
  */
+/**
+ * Public base URL. Uses NEXT_PUBLIC_SITE_URL when it's a valid URL; otherwise
+ * Vercel's production domain; otherwise a local fallback. An empty or malformed
+ * value never breaks the build.
+ */
+function siteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
+    process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
+  ];
+  for (const c of candidates) {
+    const v = c?.trim();
+    if (!v) continue;
+    try {
+      return new URL(v.startsWith("http") ? v : `https://${v}`).origin;
+    } catch {}
+  }
+  return "http://localhost:3000";
+}
+
 export const site = {
   name: "AX.Visuals",
   tagline: "We create content for businesses.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://axvisuals.lk", // [EDIT] real domain
+  url: siteUrl(),
   description:
     "AX.Visuals is a video and photography studio in Sri Lanka creating ready-to-post Reels, photos and brand films for restaurants, hotels, products and brands. Available islandwide.",
   city: "Jaffna", // [EDIT] home city — inferred from the Nallur work, please confirm
