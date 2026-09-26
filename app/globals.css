@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a0b;
+  --color-ink-2: #141416;
+  --color-line: #26262a;
+  --color-paper: #f4f2ee;
+  --color-mute: #8a8a90;
+  --color-rec: #ff3b2f;
+  --color-clay: #e8a87c;
+
+  --font-display: var(--font-syne), "Arial Black", system-ui, sans-serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-film: cubic-bezier(0.7, 0, 0.2, 1);
+
+  --breakpoint-3xl: 120rem;
+}
+
+:root {
+  color-scheme: dark;
+  --gutter: clamp(1rem, 3vw, 2.5rem);
+}
+
+html {
+  overflow-x: clip;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-ink);
+  overflow-x: clip;
+}
+
+/* Grid/flex children default to min-width:auto and grow to their widest content
+   (long words, carousels), pushing layouts off small screens. Let them shrink. */
+.grid > * {
+  min-width: 0;
+}
+
+::selection {
+  background: var(--color-rec);
+  color: var(--color-paper);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+@media (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-rec);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+@utility btn {
+  @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide transition-[background,color,filter,transform,border-color] duration-300;
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-[1600px];
+    padding-inline: var(--gutter);
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.2em] text-mute;
+  }
+  .display {
+    @apply font-display font-extrabold uppercase leading-[0.86] tracking-[-0.03em];
+  }
+  .hud {
+    @apply font-mono text-[10px] uppercase tracking-[0.18em];
+  }
+  .btn-rec {
+    @apply btn bg-rec text-paper hover:bg-[#ff5247];
+  }
+  .btn-ghost {
+    @apply btn border border-line text-paper hover:border-paper;
+  }
+  .card {
+    @apply rounded-[18px] border border-line bg-ink-2;
+  }
+  .rec-dot {
+    @apply inline-block size-2 rounded-full bg-rec;
+    animation: rec-blink 1.2s steps(1) infinite;
+  }
+  .focus-pull {
+    transition: filter 0.45s var(--ease-expo);
+  }
+  .focus-pull:hover {
+    animation: focus-pull 0.55s var(--ease-expo);
+  }
+}
+
+@keyframes rec-blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+@keyframes focus-pull {
+  0% {
+    filter: blur(0);
+  }
+  35% {
+    filter: blur(2.5px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes sprocket {
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+@keyframes shimmer {
+  to {
+    background-position: 200% 0;
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.86;
+  }
+}
+
+.shimmer-border {
+  background:
+    linear-gradient(var(--color-ink-2), var(--color-ink-2)) padding-box,
+    linear-gradient(110deg, #ff3b2f 20%, #ffb3ad 40%, #ff3b2f 60%, #8a1a14 80%) border-box;
+  background-size:
+    100% 100%,
+    200% 100%;
+  border: 1.5px solid transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+.mask-up {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.clip-shutter {
+  clip-path: inset(0 0 100% 0);
+}
+
+/* Print / light brochure theme (/pricing?print=1) */
+.theme-print {
+  --color-ink: #ffffff;
+  --color-ink-2: #f6f4f0;
+  --color-line: #dcd8d0;
+  --color-paper: #0a0a0b;
+  --color-mute: #5b5b60;
+  color-scheme: light;
+  background: #fff;
+  color: #0a0a0b;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-break {
+    break-before: page;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
